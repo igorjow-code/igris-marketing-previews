@@ -33,8 +33,12 @@
   var products = document.querySelectorAll(".product");
   chips.forEach(function (chip) {
     chip.addEventListener("click", function () {
-      chips.forEach(function (c) { c.classList.remove("is-active"); });
+      chips.forEach(function (c) {
+        c.classList.remove("is-active");
+        c.setAttribute("aria-pressed", "false");
+      });
       chip.classList.add("is-active");
+      chip.setAttribute("aria-pressed", "true");
       var filter = chip.getAttribute("data-filter");
       products.forEach(function (p) {
         var show = filter === "todos" || p.getAttribute("data-cat") === filter;
