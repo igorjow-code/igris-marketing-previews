@@ -89,16 +89,15 @@ a:focus-visible, button:focus-visible, .btn:focus-visible{
    Não depende de scroll nem de JS: se a animação não rodar, o elemento já
    nasce no estado final (opacity 1), nunca em opacity:0 esperando alguém. */
 @keyframes rise-in{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
-.hero .eyebrow, .hero h1, .hero p.lede, .hero__cta, .hero__trust, .hero__photo{
+.hero .eyebrow, .hero h1, .hero p.lede, .hero__cta, .hero__trust{
   animation:rise-in .55s var(--ease) both;
 }
 .hero h1{ animation-delay:.05s; }
 .hero p.lede{ animation-delay:.1s; }
 .hero__cta{ animation-delay:.15s; }
 .hero__trust{ animation-delay:.2s; }
-.hero__photo{ animation-delay:.12s; }
 @media (prefers-reduced-motion: reduce){
-  .hero .eyebrow, .hero h1, .hero p.lede, .hero__cta, .hero__trust, .hero__photo{ animation:none; }
+  .hero .eyebrow, .hero h1, .hero p.lede, .hero__cta, .hero__trust{ animation:none; }
 }
 .frentes .frente.reveal:nth-child(2){ transition-delay:.08s; }
 .frentes .frente.reveal:nth-child(3){ transition-delay:.16s; }
@@ -115,30 +114,61 @@ a:focus-visible, button:focus-visible, .btn:focus-visible{
 
 /* Selo — o momento assinatura: o anel real da marca (navy→indigo→red),
    carimbado no hero. Entra uma vez no load, sempre termina no estado final. */
-.selo{ position:absolute; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 10px 18px rgba(34,29,26,.28)); }
+.selo{ position:absolute; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 14px 22px rgba(34,29,26,.3)); }
 .selo__ring{ position:absolute; inset:0; width:100%; height:100%; }
 .selo__ring circle.track{ fill:none; stroke:var(--paper); stroke-width:9; opacity:.9; }
 .selo__ring circle.grad{ fill:none; stroke-width:6.5; }
 .selo__ring .stop-navy{ stop-color:var(--navy); }
 .selo__ring .stop-indigo{ stop-color:var(--indigo); }
 .selo__ring .stop-red{ stop-color:var(--red); }
-.selo__ring text{ font-family:var(--sans); font-weight:700; fill:var(--ink); }
 .selo__core{ position:relative; width:44%; height:44%; }
 .selo__core .half{ position:absolute; inset:0; font-family:var(--serif); font-weight:600; line-height:1; text-align:center; display:flex; align-items:center; justify-content:center; }
 .selo__core .half.navy{ color:var(--navy); clip-path:inset(0 0 50% 0); }
 .selo__core .half.red{ color:var(--red); clip-path:inset(48% 0 0 0); }
 
-.selo--hero{ width:clamp(96px,13vw,148px); height:clamp(96px,13vw,148px); top:-14px; right:-14px; z-index:2; animation:stamp-in .6s var(--ease-stamp) both; animation-delay:.5s; }
-.selo--hero .selo__core{ font-size:clamp(34px,4.2vw,52px); }
-.selo--hero .selo__ring text{ font-size:6.6px; letter-spacing:.02em; }
-@keyframes stamp-in{
-  0%{ opacity:0; transform:scale(.7) rotate(-18deg); }
-  70%{ opacity:1; transform:scale(1.06) rotate(-6deg); }
-  100%{ opacity:1; transform:scale(1) rotate(-8deg); }
+/* Selo gigante do hero — o momento assinatura de verdade: grande, vetorial
+   (nunca borrado, ao contrário da foto), com a fita/ribbon carimbada por cima. */
+.selo--giant{
+  width:clamp(190px,25vw,300px); height:clamp(190px,25vw,300px);
+  top:0; right:2%; z-index:2;
+  animation:stamp-in-giant .75s var(--ease-stamp) both; animation-delay:.5s;
+}
+.selo--giant .selo__core{ font-size:clamp(58px,8.6vw,104px); }
+.selo--giant .ribbon{
+  position:absolute; left:50%; top:56%; width:148%; z-index:3;
+  transform:translate(-50%,-50%) rotate(-10deg);
+  background:var(--navy); color:#fff; font-family:var(--sans); font-weight:700;
+  font-size:clamp(10.5px,1.05vw,13px); letter-spacing:.05em; text-transform:uppercase;
+  text-align:center; padding:8px 6px; white-space:nowrap;
+  box-shadow:0 12px 22px -10px rgba(0,0,0,.4);
+}
+@keyframes stamp-in-giant{
+  0%{ opacity:0; transform:scale(.5) rotate(-26deg); }
+  62%{ opacity:1; transform:scale(1.1) rotate(-3deg); }
+  100%{ opacity:1; transform:scale(1) rotate(-6deg); }
 }
 @media (prefers-reduced-motion: reduce){
-  .selo--hero{ animation:none; transform:rotate(-8deg); opacity:1; }
+  .selo--giant{ animation:none; transform:rotate(-6deg); opacity:1; }
 }
+
+/* Hero stage — o palco do selo: dois "blobs" de cor atrás, o selo gigante,
+   e a foto real (baixa resolução) reduzida a um recorte de prova, preso como
+   se tivesse fita — em vez de carregar o peso visual que ela não aguenta. */
+.hero__stage{ position:relative; min-height:clamp(340px,40vw,420px); }
+.stage__blob{ position:absolute; border-radius:50%; filter:blur(42px); z-index:0; pointer-events:none; }
+.stage__blob--navy{ width:320px; height:320px; top:-70px; right:-50px; background:radial-gradient(circle, rgba(36,49,111,.24), rgba(36,49,111,0) 70%); }
+.stage__blob--red{ width:240px; height:240px; bottom:-30px; left:-30px; background:radial-gradient(circle, rgba(138,44,64,.16), rgba(138,44,64,0) 70%); }
+
+.proof{ position:absolute; left:0; bottom:6%; width:clamp(118px,15vw,164px); z-index:4; transform:rotate(4deg); animation:proof-in .55s var(--ease-stamp) both; animation-delay:.75s; }
+.proof img{ width:100%; height:116px; object-fit:cover; object-position:50% 28%; filter:saturate(1.12) contrast(1.06) brightness(1.1); border:6px solid #fff; border-radius:6px; display:block; box-shadow:0 16px 26px -14px rgba(34,29,26,.4); }
+.proof__tape{ position:absolute; top:-11px; left:50%; width:58px; height:22px; background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.65); transform:translateX(-50%) rotate(-3deg); box-shadow:0 2px 6px rgba(0,0,0,.08); }
+@keyframes proof-in{ from{ opacity:0; transform:rotate(4deg) translateY(14px); } to{ opacity:1; transform:rotate(4deg) translateY(0); } }
+@media (prefers-reduced-motion: reduce){
+  .proof{ animation:none; opacity:1; }
+}
+
+.hero__stage .badge{ position:absolute; right:0; bottom:0; background:rgba(255,255,255,.94); backdrop-filter:blur(6px); border-radius:14px; padding:10px 16px; display:flex; align-items:center; gap:10px; font-size:.84rem; font-weight:600; box-shadow:0 6px 18px rgba(0,0,0,.14); z-index:4; }
+.hero__stage .badge svg{ width:16px; height:16px; color:var(--red); flex:none; }
 
 /* Selos das frentes — eco do selo do hero, uma cor só por card, colados como adesivo */
 .frente__seal{ width:50px; height:50px; position:relative; flex:none; margin-bottom:2px; }
@@ -155,19 +185,15 @@ a:focus-visible, button:focus-visible, .btn:focus-visible{
 .hero__inner{ display:grid; grid-template-columns:1.05fr .95fr; gap:38px; align-items:center; }
 @media (max-width:820px){ .hero__inner{ grid-template-columns:1fr; gap:28px; } }
 .eyebrow{ display:inline-flex; align-items:center; gap:8px; font-size:.86rem; font-weight:600; color:var(--red); background:var(--red-soft); padding:6px 14px; border-radius:99px; margin-bottom:18px; }
-.hero h1{ font-size:clamp(2.2rem,6.4vw,3.4rem); margin-bottom:16px; text-wrap:balance; }
-.hero h1 em{ font-style:normal; color:var(--red); }
+.hero h1{ font-size:clamp(2.6rem,7.6vw,4.6rem); margin-bottom:20px; text-wrap:balance; letter-spacing:-.02em; }
+.hero h1 em{ position:relative; display:inline-block; font-style:normal; color:var(--red); }
+.hero h1 em .underline{ position:absolute; left:2%; bottom:-.1em; width:96%; height:.16em; overflow:visible; }
+.hero h1 em .underline path{ stroke:var(--red); stroke-width:3.5; fill:none; stroke-linecap:round; opacity:.85; }
 .hero p.lede{ font-size:1.08rem; color:var(--ink-soft); margin-bottom:26px; max-width:46ch; }
 .hero__cta{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px; }
 .hero__trust{ display:flex; gap:20px; flex-wrap:wrap; list-style:none; font-size:.85rem; color:var(--ink-faint); }
 .hero__trust li{ display:flex; align-items:center; gap:6px; }
 .hero__trust svg{ width:15px; height:15px; color:var(--red); flex:none; }
-
-.hero__photo{ position:relative; border-radius:var(--r-xl); overflow:visible; }
-.hero__photo .frame{ border-radius:var(--r-xl); overflow:hidden; box-shadow:0 20px 50px -20px rgba(34,29,26,.35); }
-.hero__photo img{ width:100%; height:340px; object-fit:cover; object-position:50% 28%; filter:saturate(1.12) contrast(1.06) brightness(1.1); }
-.hero__photo .badge{ position:absolute; left:16px; bottom:16px; background:rgba(255,255,255,.94); backdrop-filter:blur(6px); border-radius:14px; padding:10px 16px; display:flex; align-items:center; gap:10px; font-size:.84rem; font-weight:600; box-shadow:0 6px 18px rgba(0,0,0,.14); }
-.hero__photo .badge svg{ width:16px; height:16px; color:var(--red); flex:none; }
 
 /* Frentes */
 .section{ padding:clamp(44px,7vw,80px) 0; }
@@ -197,7 +223,9 @@ a:focus-visible, button:focus-visible, .btn:focus-visible{
 .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; counter-reset:step; }
 @media (max-width:820px){ .steps{ grid-template-columns:1fr; gap:22px; } }
 .step{ text-align:center; }
-.step__n{ width:38px; height:38px; border-radius:50%; background:var(--card); border:1.5px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:600; margin:0 auto 14px; }
+.step__n{ width:38px; height:38px; border-radius:50%; background:var(--card); border:1.5px dashed var(--ink-faint); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:600; margin:0 auto 14px; transform:rotate(-4deg); }
+.steps .step:nth-child(2) .step__n{ transform:rotate(3deg); }
+.steps .step:nth-child(3) .step__n{ transform:rotate(-3deg); }
 .step h4{ font-family:var(--sans); font-weight:700; font-size:1rem; margin-bottom:6px; }
 .step p{ color:var(--ink-soft); font-size:.92rem; }
 
@@ -216,8 +244,14 @@ a:focus-visible, button:focus-visible, .btn:focus-visible{
 
 .demo-banner{ background:#3a2c0a; color:#f5d78a; text-align:center; font-size:.8rem; padding:8px 12px; }
 
+@media (max-width:820px){
+  .hero__stage{ min-height:300px; }
+}
 @media (max-width:560px){
   .frentes{ gap:14px; }
-  .hero__photo img{ height:220px; }
-  .selo--hero{ top:-10px; right:-10px; }
+  .selo--giant{ width:clamp(150px,42vw,200px); height:clamp(150px,42vw,200px); right:0; }
+  .selo--giant .selo__core{ font-size:clamp(42px,11vw,64px); }
+  .proof{ width:110px; bottom:2%; }
+  .proof img{ height:96px; }
+  .hero__stage .badge{ font-size:.76rem; padding:8px 12px; }
 }
