@@ -8,6 +8,7 @@ independente, mostrada antes de virar cliente pagante.
 ## Sites
 
 - [`brancco/`](brancco/) — Grupo Brancco (Feira de Santana, BA), 14/09/2026.
+- [`vivian-melo/`](vivian-melo/) — Vivian Melo, consultora de imagem e estilo (Feira de Santana, BA), 18/11/2026. Fotos e vídeos cedidos pela cliente.
 
 ## Como isso funciona
 
