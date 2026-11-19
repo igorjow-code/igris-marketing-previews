@@ -1,0 +1,5 @@
+# Prévia: noindex na página. Quando for para o domínio próprio, este arquivo vai para a raiz
+# do domínio liberando os crawlers de busca e de IA (checklist GEO).
+User-agent: *
+Allow: /
+Sitemap: https://igorjow-code.github.io/igris-marketing-previews/joao-netto/sitemap.xml
