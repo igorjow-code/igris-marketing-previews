@@ -122,6 +122,52 @@
   window.addEventListener('resize', configura);
   if (reduz.addEventListener) reduz.addEventListener('change', configura);
 
+  /* ---- ESPELHO: mesma selfie, outro Bruno. A rolagem passa o marca-texto e troca a foto ---- */
+  (function () {
+    var esp = doc.querySelector('.espelho');
+    if (!esp) return;
+    var fs = [].slice.call(esp.querySelectorAll('.esp-f')), bs = [].slice.call(esp.querySelectorAll('.esp-barra i'));
+    var liga = false, pend = false, at = -1, idle = 0;
+    var K = fs.length - 1;                      // 3 trocas
+    function pinta() {
+      pend = false;
+      if (!liga) return;
+      var r = esp.getBoundingClientRect(), curso = esp.offsetHeight - window.innerHeight;
+      var p = Math.min(1, Math.max(0, -r.top / curso));
+      var t = Math.min(K, Math.max(0, (p - 0.06) / 0.84 * K));
+      var n = 0;
+      fs.forEach(function (f, k) {
+        if (!k) return;
+        var w = Math.min(1, Math.max(0, (t - (k - 1) - 0.3) / 0.55));   // cada foto descansa; a troca ocupa 55% do trecho
+        f.style.setProperty('--w', w.toFixed(4));
+        f.style.setProperty('--risco', w > 0 && w < 1 ? 1 : 0);
+        if (w > 0.5) n = k;
+      });
+      if (n !== at) {
+        at = n;
+        fs.forEach(function (f, k) { f.classList.toggle('atual', k === n); });
+        bs.forEach(function (b, k) { b.classList.toggle('ok', k <= n); });
+      }
+    }
+    function rola() {
+      if (!liga) return;
+      esp.classList.remove('idle'); clearTimeout(idle);
+      idle = setTimeout(function () { var r = esp.getBoundingClientRect(); if (r.top <= 80 && r.bottom > window.innerHeight && at < K) esp.classList.add('idle'); }, 800);
+      if (!pend) { pend = true; requestAnimationFrame(pinta); }
+    }
+    function ajusta() {
+      liga = !reduz.matches && window.innerHeight >= 560;
+      esp.classList.toggle('on', liga);
+      if (!liga) { esp.classList.remove('idle'); return; }
+      fs.forEach(function (f) { f.querySelector('img').loading = 'eager'; });
+      at = -1; pinta();
+    }
+    ajusta();
+    window.addEventListener('scroll', rola, { passive: true });
+    window.addEventListener('resize', ajusta);
+    if (reduz.addEventListener) reduz.addEventListener('change', ajusta);
+  })();
+
   /* ---- vídeos: tocam só quando visíveis, sem som; com movimento reduzido, controles ---- */
   var vids = [].slice.call(doc.querySelectorAll('video.vid'));
   if (reduz.matches) {
