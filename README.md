@@ -14,4 +14,4 @@ independente, mostrada antes de virar cliente pagante.
 ## Como isso funciona
 
 Cada pasta é estática (HTML/CSS/JS puro, sem build). O gerador vive no repositório privado
-`igris-os`, em `clientes/igris-marketing/`.
+`igris-os`, em `projetos/igris-marketing/`.
